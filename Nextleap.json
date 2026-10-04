@@ -1,0 +1,169 @@
+{
+  "name": "Nextleap",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3838a719-439f-490d-926b-edee38531149",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Agent instructions: Look at my events/meetings for the day and send me an email to rubygoyal41@gmail.com on the top two most important events of the day and tell me why. Look at the event title, description, attendees to find this out.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "2a87e6ea-5f66-47ed-9708-5e2b9bd70320",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "qwen/qwen3.8-27b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        96,
+        208
+      ],
+      "id": "ac2c0276-533d-4049-a2c6-313a14454240",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "DWWza3SU7HexftaZ",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        320,
+        240
+      ],
+      "id": "eb1a8194-4022-4ce4-abd1-307354468470",
+      "name": "Send a message in Gmail",
+      "webhookId": "dd813144-e6ed-4c2c-af6f-5d7a0c9e89bc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ykSTESUYQSR6IV5u",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "rubygoyal41@gmail.com",
+          "mode": "list",
+          "cachedResultName": "rubygoyal41@gmail.com"
+        },
+        "returnAll": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        480,
+        160
+      ],
+      "id": "76463840-90ff-4e4e-85f5-71d072e632ad",
+      "name": "Get many events in Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "pfclASm3AAqVUY4d",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many events in Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c97300ee-bed8-440f-a53a-12a892652d63",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5ac6911b2956f9cdcdc2d50c4cd37d1a295d63f8781eaf5bdc268c715b9e3d60"
+  },
+  "nodeGroups": [],
+  "id": "Swm3mvAFaQ0STzpN",
+  "tags": []
+}
